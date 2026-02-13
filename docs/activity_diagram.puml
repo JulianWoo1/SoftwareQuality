@@ -1,0 +1,45 @@
+@startuml
+|Application|
+start
+:Style.createStyles();
+:Presentation()  // new Presentation created (model)
+fork
+  :SlideViewerFrame(title, presentation)  
+  :SlideViewerComponent created and passed presentation
+  :presentation.setShowView(slideViewerComponent)
+  :setupWindow()        
+  note right: adds component to frame,
+  note right: adds KeyController and MenuController
+  :frame.setVisible(true)
+end fork
+
+if (argv.length == 0)
+  :Accessor.getDemoAccessor().loadFile(presentation, "");
+  note right: DemoPresentation creates slides programmatically
+else
+  :new XMLAccessor().loadFile(presentation, argv[0]);
+  note right: XMLAccessor parses presentation, slide, item
+endif
+
+:presentation.setSlideNumber(0);
+:slideViewComponent.update(presentation, presentation.getCurrentSlide());
+:frame.setTitle(presentation.getTitle());
+:repaint() -> paintComponent()
+:Slide.draw() -> iterate SlideItems (TextItem/BitmapItem.draw)
+
+partition "User Interactions" {
+  :User selects File -> Open (menu);
+  :MenuController action -> presentation.clear();
+  :MenuController -> XMLAccessor.loadFile(presentation, "test.xml");
+  :presentation.setSlideNumber(0);
+  :parent.repaint();
+  
+  :User presses keys (PgDn, PgUp, Enter, Up, Down, q);
+  :KeyController -> presentation.nextSlide()/prevSlide() or System.exit(0);
+  :presentation.setSlideNumber(n);
+  :slideViewComponent.update(...)
+  :repaint() -> paintComponent()
+}
+
+stop
+@enduml
