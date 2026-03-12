@@ -2,7 +2,7 @@
 |Application|
 start
 :Style.createStyles();
-:Presentation()  // new Presentation created (model)
+:com.nhlstenden.jabberpoint.Presentation()  // new com.nhlstenden.jabberpoint.Presentation created (model)
 fork
   :SlideViewerFrame(title, presentation)  
   :SlideViewerComponent created and passed presentation
@@ -25,7 +25,7 @@ endif
 :slideViewComponent.update(presentation, presentation.getCurrentSlide());
 :frame.setTitle(presentation.getTitle());
 :repaint() -> paintComponent()
-:Slide.draw() -> iterate SlideItems (TextItem/BitmapItem.draw)
+:com.nhlstenden.jabberpoint.Slide.draw() -> iterate com.nhlstenden.jabberpoint.SlideItems (TextItem/BitmapItem.draw)
 
 partition "User Interactions" {
   :User selects File -> Open (menu);
