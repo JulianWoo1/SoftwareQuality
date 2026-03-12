@@ -1,0 +1,30 @@
+package com.nhlstenden.jabberpoint.SlideItems;
+
+import com.nhlstenden.jabberpoint.SlideItem;
+
+import java.awt.*;
+
+public class TextItem extends SlideItem
+{
+    private String textValue;
+    
+    public TextItem(int level, String textValue) {
+        this.textValue = textValue;
+    }
+
+    public String getTextValue()
+    {
+        return this.textValue;
+    }
+
+    public void setTextValue(String textValue)
+    {
+        this.textValue = textValue;
+    }
+
+    @Override
+    public void draw(Graphics graphics, int x, int y)
+    {
+
+    }
+}

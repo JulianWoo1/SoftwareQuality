@@ -1,0 +1,21 @@
+name: Production (Java)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Production placeholder
+        run: echo "Production deploy goes here"
