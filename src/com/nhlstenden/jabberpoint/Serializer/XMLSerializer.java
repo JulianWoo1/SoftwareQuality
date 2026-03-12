@@ -17,8 +17,6 @@ import java.util.List;
 public class XMLSerializer
 {
     
-    private List<Slide> slides;
-    private String title;
     
     public void save(String path) {
         
@@ -30,7 +28,7 @@ public class XMLSerializer
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document document = db.parse(new File(path));
 
-
+        traverse(document.getDocumentElement(), new SlideLoaderVisitor());        
     }
 
     private void traverse(Node node, XMLVisitor visitor) {
@@ -42,25 +40,5 @@ public class XMLSerializer
         for (int i = 0; i < children.getLength(); i++) {
             traverse(children.item(i), visitor);
         }
-    }
-
-    public List<Slide> getSlides()
-    {
-        return this.slides;
-    }
-
-    public void setSlides(List<Slide> slides)
-    {
-        this.slides = slides;
-    }
-
-    public String getTitle()
-    {
-        return this.title;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
     }
 }

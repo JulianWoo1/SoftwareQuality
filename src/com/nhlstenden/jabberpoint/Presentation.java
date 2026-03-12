@@ -67,25 +67,27 @@ public class Presentation implements SlideComponent
     }
     
     public void loadPresentationFromXMLFile(String path) {
-        
-    }
-    
-    public void savePresentationToXMLFile(String path) {
         XMLSerializer serializer = new XMLSerializer();
         try
         {
+            clearPresentation();
             serializer.load(path);
-            loadPresentation(serializer.getTitle(), serializer.getSlides());
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
     }
     
-    public void loadPresentation(String title, List<Slide> slides) {
-        this.title = title;
-        this.slides = slides;
+    public void savePresentationToXMLFile(String path) {
+        XMLSerializer serializer = new XMLSerializer();
+        
+        serializer.save(path);
+    }
+    
+    public void clearPresentation() {
         this.currentSlide = 0;
+        this.slides.clear();
+        this.title = "Unknown presentation";
     }
     
 

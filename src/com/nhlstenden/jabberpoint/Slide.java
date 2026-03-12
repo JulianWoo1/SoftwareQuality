@@ -18,6 +18,15 @@ public class Slide implements SlideComponent
         return this.slideItems;
     }
 
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+    
+    public void addSlideItem(SlideItem item) {
+        this.slideItems.add(item);
+    }
+
     @Override
     public void draw(Graphics graphics, int x, int y)
     {
