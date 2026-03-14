@@ -35,6 +35,13 @@ public class BitmapItem extends SlideItem
     @Override
     public void draw(Graphics graphics, int x, int y)
     {
+        if(this.bufferedImage == null)
+        {
+            return;
+        }
 
+        int indent = level * 20;
+
+        graphics.drawImage(this.bufferedImage, x + indent, y, null);
     }
 }

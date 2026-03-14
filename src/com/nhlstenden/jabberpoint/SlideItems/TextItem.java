@@ -9,6 +9,7 @@ public class TextItem extends SlideItem
     private String textValue;
     
     public TextItem(int level, String textValue) {
+        super(level);
         this.textValue = textValue;
     }
 
@@ -25,6 +26,9 @@ public class TextItem extends SlideItem
     @Override
     public void draw(Graphics graphics, int x, int y)
     {
+        int indent = level * 20;
 
+        graphics.setFont(new Font("Arial", Font.PLAIN, 20));
+        graphics.drawString(textValue, x + indent, y);
     }
 }

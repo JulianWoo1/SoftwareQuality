@@ -1,12 +1,13 @@
 package com.nhlstenden.jabberpoint;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Slide implements SlideComponent
 {
     private String title;
-    private List<SlideItem> slideItems;
+    private List<SlideItem> slideItems = new ArrayList<>();
 
     public String getTitle()
     {
@@ -30,6 +31,17 @@ public class Slide implements SlideComponent
     @Override
     public void draw(Graphics graphics, int x, int y)
     {
+        int offsetY = y + 50;
 
+        graphics.setFont(new Font("Arial", Font.BOLD, 36));
+        graphics.drawString(title, x + 50, offsetY);
+
+        offsetY += 60;
+
+        for(SlideItem item : this.slideItems)
+        {
+            item.draw(graphics, x + 70, offsetY);
+            offsetY += 40;
+        }
     }
 }

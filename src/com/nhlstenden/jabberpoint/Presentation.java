@@ -4,6 +4,7 @@ import com.nhlstenden.jabberpoint.Serializer.XMLSerializer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Presentation implements SlideComponent
@@ -20,10 +21,11 @@ public class Presentation implements SlideComponent
     }
     
     private String title;
-    private List<Slide> slides;
+    private List<Slide> slides = new ArrayList<>();
     private int currentSlide;
     
-    private Presentation(){}
+    private Presentation()
+    {}
 
     public String getTitle()
     {
@@ -94,6 +96,13 @@ public class Presentation implements SlideComponent
     @Override
     public void draw(Graphics graphics, int x, int y)
     {
-        
+        if(this.slides == null || this.slides.isEmpty())
+        {
+            graphics.drawString("No slides loaded", x + 50, y + 50);
+            return;
+        }
+
+        Slide slide = this.slides.get(currentSlide);
+        slide.draw(graphics, x, y);
     }
 }

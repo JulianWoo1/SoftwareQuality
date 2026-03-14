@@ -25,6 +25,7 @@ public class SlideLoaderVisitor implements XMLVisitor {
             }
             case "slide": {
                 this.activeSlide = new Slide();
+                Presentation.getInstance().getSlides().add(this.activeSlide);
                 break;
             }
             case "title":
