@@ -3,6 +3,9 @@ package com.nhlstenden.jabberpoint;
 import com.nhlstenden.jabberpoint.Serializer.XMLSerializer;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +103,7 @@ public class Presentation implements SlideComponent
         setCurrentSlide(0);
     }
 
-    public void savePresentationToXMLFile(String path)
+    public void savePresentationToXMLFile(String path) throws ParserConfigurationException, TransformerException
     {
         XMLSerializer serializer = new XMLSerializer();
 
