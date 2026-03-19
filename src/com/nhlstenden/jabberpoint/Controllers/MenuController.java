@@ -8,7 +8,8 @@ public class MenuController extends MenuBar
 {
     private WindowFrame windowFrame;
 
-    public MenuController(WindowFrame window) {
+    public MenuController(WindowFrame window)
+    {
         this.windowFrame = window;
     }
 }

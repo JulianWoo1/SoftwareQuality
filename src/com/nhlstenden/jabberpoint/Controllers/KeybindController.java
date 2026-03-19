@@ -8,7 +8,8 @@ public class KeybindController extends KeyAdapter
 {
     private WindowFrame windowFrame;
     
-    public KeybindController(WindowFrame window) {
+    public KeybindController(WindowFrame window)
+    {
         this.windowFrame = window;
     }
 }

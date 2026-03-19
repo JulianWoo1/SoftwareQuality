@@ -13,7 +13,8 @@ public class SlideLoaderVisitor implements XMLVisitor {
     private Slide activeSlide;
 
     @Override
-    public void visit(Element element) {
+    public void visit(Element element)
+    {
         Presentation presentation = Presentation.getInstance();
         String tag = element.getTagName();
         
@@ -43,7 +44,8 @@ public class SlideLoaderVisitor implements XMLVisitor {
         }
     }
 
-    private void loadSlideItem(Element element) {
+    private void loadSlideItem(Element element)
+    {
         String kind = element.getAttribute("kind");
         int level = Integer.parseInt(element.getAttribute("level"));
         String content = element.getTextContent();

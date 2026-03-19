@@ -14,17 +14,20 @@ public class WindowFrame extends JFrame
         this.setupKeybinds();
     }
 
-    private void setupWindow() {
+    private void setupWindow()
+    {
         add(new WindowPainter());
         setSize(new Dimension(1200, 800));
         setVisible(true);
     }
     
-    private void setupMenu() {
+    private void setupMenu()
+    {
         setMenuBar(new MenuController(this));
     }
     
-    private void setupKeybinds() {
+    private void setupKeybinds()
+    {
         addKeyListener(new KeybindController(this));
     }
 }
