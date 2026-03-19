@@ -56,17 +56,24 @@ public class Presentation implements SlideComponent
 
     public void setCurrentSlide(int currentSlide)
     {
+        if (currentSlide >= this.slides.size() - 1 || currentSlide < 0)
+        {
+            return;
+        }
         this.currentSlide = currentSlide;
+        
+        WindowPainter.DoRepaint();
     }
 
     public void nextSlide()
     {
-        if (this.currentSlide >= this.slides.size())
+        if (this.currentSlide >= this.slides.size() - 1)
         {
             return;
         }
 
         this.currentSlide++;
+        WindowPainter.DoRepaint();
     }
 
     public void previousSlide()
@@ -76,19 +83,21 @@ public class Presentation implements SlideComponent
             return;
         }
         this.currentSlide--;
+        WindowPainter.DoRepaint();
     }
 
     public void loadPresentationFromXMLFile(String path)
     {
+        clearPresentation();
         XMLSerializer serializer = new XMLSerializer();
         try
         {
-            clearPresentation();
             serializer.load(path);
         } catch (Exception e)
         {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
+        setCurrentSlide(0);
     }
 
     public void savePresentationToXMLFile(String path)
@@ -103,6 +112,7 @@ public class Presentation implements SlideComponent
         this.currentSlide = 0;
         this.slides.clear();
         this.title = "Unknown presentation";
+        WindowPainter.DoRepaint();
     }
 
 

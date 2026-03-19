@@ -33,6 +33,7 @@ public class SlideLoaderVisitor implements XMLVisitor {
             {
                 assert this.activeSlide != null;
                 this.activeSlide.setTitle(element.getTextContent());
+                break;
             }
             case "item":
             {
