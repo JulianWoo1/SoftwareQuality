@@ -9,9 +9,16 @@ import org.xml.sax.SAXException;
 
 import org.w3c.dom.Document;
 
+import javax.xml.crypto.dsig.Transform;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,21 +31,57 @@ public class XMLSerializer
 
     public XMLSerializer()
     {
-        this.title = this.title;
+        this.title = title;
         this.slides = new ArrayList<>();
     }
 
-    public void save(String path)
+    public void addSlide(Slide slide)
     {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        this.slides.add(slide);
+    }
 
+    public void save(String path) throws ParserConfigurationException, TransformerException
+    {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.newDocument();
+
+        Element root = doc.createElement("presentation");
+        doc.appendChild(root);
+
+        Element titleElement = doc.createElement("title");
+        titleElement.appendChild(doc.createTextNode(this.title));
+        root.appendChild(titleElement);
+
+        for(Slide slide : this.slides)
+        {
+            Element slideElement = doc.createElement("slide");
+
+            for(SlideItem slideItem : slide.getSlideItems())
+            {
+                Element itemElement = doc.createElement("item");
+                itemElement.setAttribute("level", String.valueOf(slideItem.getLevel()));
+                itemElement.appendChild(doc.createTextNode(slideItem.getText));
+
+                slideElement.appendChild(itemElement);
+            }
+
+            root.appendChild(slideElement);
+        }
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(new File(path));
+
+        transformer.transform(source, result);
     }
 
     public void load(String path) throws ParserConfigurationException, IOException, SAXException
     {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document document = db.parse(new File(path));
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(new File(path));
 
         traverse(document.getDocumentElement(), new SlideLoaderVisitor());
     }

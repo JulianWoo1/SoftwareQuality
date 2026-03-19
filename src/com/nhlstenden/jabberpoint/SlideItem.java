@@ -3,7 +3,7 @@ package com.nhlstenden.jabberpoint;
 public abstract class SlideItem implements SlideComponent
 {
     protected int level = 0;
-    
+
     public SlideItem(int level) {
         this.level = level;
     }
@@ -21,4 +21,6 @@ public abstract class SlideItem implements SlideComponent
     {
         this.level = level;
     }
+
+    public String getText;
 }
