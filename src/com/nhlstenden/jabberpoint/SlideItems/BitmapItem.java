@@ -40,7 +40,7 @@ public class BitmapItem extends SlideItem
             return;
         }
 
-        int indent = level * 20;
+        int indent = this.level * 20;
 
         graphics.drawImage(this.bufferedImage, x + indent, y, null);
     }

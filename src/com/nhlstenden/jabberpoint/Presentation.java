@@ -10,22 +10,24 @@ import java.util.List;
 public class Presentation implements SlideComponent
 {
     private static Presentation instance;
-    
-    public static Presentation getInstance() {
-        if(instance == null)
+
+    public static Presentation getInstance()
+    {
+        if (instance == null)
         {
             instance = new Presentation();
         }
-        
+
         return instance;
     }
-    
+
     private String title;
     private List<Slide> slides = new ArrayList<>();
     private int currentSlide;
-    
+
     private Presentation()
-    {}
+    {
+    }
 
     public String getTitle()
     {
@@ -56,19 +58,28 @@ public class Presentation implements SlideComponent
     {
         this.currentSlide = currentSlide;
     }
-    
-    public void nextSlide() {
-        if(this.currentSlide >= this.slides.size()) return;
-        
+
+    public void nextSlide()
+    {
+        if (this.currentSlide >= this.slides.size())
+        {
+            return;
+        }
+
         this.currentSlide++;
     }
-    
-    public void previousSlide() {
-        if(this.currentSlide <= 0) return;
+
+    public void previousSlide()
+    {
+        if (this.currentSlide <= 0)
+        {
+            return;
+        }
         this.currentSlide--;
     }
-    
-    public void loadPresentationFromXMLFile(String path) {
+
+    public void loadPresentationFromXMLFile(String path)
+    {
         XMLSerializer serializer = new XMLSerializer();
         try
         {
@@ -79,30 +90,32 @@ public class Presentation implements SlideComponent
             throw new RuntimeException(e);
         }
     }
-    
-    public void savePresentationToXMLFile(String path) {
+
+    public void savePresentationToXMLFile(String path)
+    {
         XMLSerializer serializer = new XMLSerializer();
-        
+
         serializer.save(path);
     }
-    
-    public void clearPresentation() {
+
+    public void clearPresentation()
+    {
         this.currentSlide = 0;
         this.slides.clear();
         this.title = "Unknown presentation";
     }
-    
+
 
     @Override
     public void draw(Graphics graphics, int x, int y)
     {
-        if(this.slides == null || this.slides.isEmpty())
+        if (this.slides == null || this.slides.isEmpty())
         {
             graphics.drawString("No slides loaded", x + 50, y + 50);
             return;
         }
 
-        Slide slide = this.slides.get(currentSlide);
+        Slide slide = this.slides.get(this.currentSlide);
         slide.draw(graphics, x, y);
     }
 }

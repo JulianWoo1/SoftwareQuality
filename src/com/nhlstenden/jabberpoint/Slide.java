@@ -34,7 +34,7 @@ public class Slide implements SlideComponent
         int offsetY = y + 50;
 
         graphics.setFont(new Font("Arial", Font.BOLD, 36));
-        graphics.drawString(title, x + 50, offsetY);
+        graphics.drawString(this.title, x + 50, offsetY);
 
         offsetY += 60;
 

@@ -1,6 +1,7 @@
 package com.nhlstenden.jabberpoint.Serializer;
 
 import com.nhlstenden.jabberpoint.Slide;
+import com.nhlstenden.jabberpoint.SlideItem;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -12,12 +13,20 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class XMLSerializer
 {
-    
-    
+    private  String title;
+    private List<Slide> slides;
+
+    public XMLSerializer()
+    {
+        this.title = this.title;
+        this.slides = new ArrayList<>();
+    }
+
     public void save(String path) {
         
     }
