@@ -12,15 +12,20 @@ import java.util.List;
 
 public class Presentation implements SlideComponent
 {
-    private static Presentation instance;
+    private static volatile Presentation instance;
 
     public static Presentation getInstance()
     {
         if (instance == null)
         {
-            instance = new Presentation();
+            synchronized (Presentation.class)
+            {
+                if (instance == null)
+                {
+                    instance = new Presentation();
+                }
+            }
         }
-
         return instance;
     }
 
@@ -59,7 +64,7 @@ public class Presentation implements SlideComponent
 
     public void setCurrentSlide(int currentSlide)
     {
-        if (currentSlide >= this.slides.size() - 1 || currentSlide < 0)
+        if (currentSlide > this.slides.size() || currentSlide < 0)
         {
             return;
         }
@@ -70,7 +75,7 @@ public class Presentation implements SlideComponent
 
     public void nextSlide()
     {
-        if (this.currentSlide >= this.slides.size() - 1)
+        if (this.currentSlide + 1 > this.slides.size())
         {
             return;
         }
@@ -81,7 +86,7 @@ public class Presentation implements SlideComponent
 
     public void previousSlide()
     {
-        if (this.currentSlide <= 0)
+        if (this.currentSlide - 1 < 0)
         {
             return;
         }
@@ -93,21 +98,27 @@ public class Presentation implements SlideComponent
     {
         clearPresentation();
         XMLSerializer serializer = new XMLSerializer();
+        
         try
         {
             serializer.load(path);
         } catch (Exception e)
         {
-            System.out.println(e.getMessage());
+            System.out.printf("Could not load presentation \"%s\": %s%n", path, e.getMessage());
         }
         setCurrentSlide(0);
     }
 
-    public void savePresentationToXMLFile(String path) throws ParserConfigurationException, TransformerException
+    public void savePresentationToXMLFile(String path) 
     {
         XMLSerializer serializer = new XMLSerializer();
 
-        serializer.save(path);
+        try
+        {
+            serializer.save(path);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void clearPresentation()

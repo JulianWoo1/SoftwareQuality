@@ -31,7 +31,6 @@ public class XMLSerializer
 
     public XMLSerializer()
     {
-        this.title = title;
         this.slides = new ArrayList<>();
     }
 
