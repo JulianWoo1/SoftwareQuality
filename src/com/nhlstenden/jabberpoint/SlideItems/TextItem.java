@@ -31,4 +31,10 @@ public class TextItem extends SlideItem
         graphics.setFont(new Font("Arial", Font.PLAIN, 20));
         graphics.drawString(this.textValue, x + indent, y);
     }
+
+    @Override
+    public String getText()
+    {
+        return this.textValue;
+    }
 }

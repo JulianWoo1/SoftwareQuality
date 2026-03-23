@@ -18,7 +18,7 @@ public class MenuController extends MenuBar
             put("Open",() -> {
                 JFileChooser chooser = new JFileChooser();
 
-                if(chooser.showOpenDialog(windowFrame) == JFileChooser.APPROVE_OPTION)
+                if(chooser.showOpenDialog(MenuController.this.windowFrame) == JFileChooser.APPROVE_OPTION)
                 {
                     Presentation.getInstance().loadPresentationFromXMLFile(chooser.getSelectedFile().getAbsolutePath());
                 }
@@ -27,7 +27,7 @@ public class MenuController extends MenuBar
             put("Save",() -> {
                 JFileChooser chooser = new JFileChooser();
 
-                if(chooser.showSaveDialog(windowFrame) == JFileChooser.APPROVE_OPTION)
+                if(chooser.showSaveDialog(MenuController.this.windowFrame) == JFileChooser.APPROVE_OPTION)
                 {
                     Presentation.getInstance().savePresentationToXMLFile(chooser.getSelectedFile().getAbsolutePath());
                 }
@@ -56,7 +56,7 @@ public class MenuController extends MenuBar
     {
         this.windowFrame = window;
         
-        for (Map.Entry<String, HashMap<String, Runnable>> menuItem : menuBar.entrySet())
+        for (Map.Entry<String, HashMap<String, Runnable>> menuItem : this.menuBar.entrySet())
         {
             Menu menu = new Menu(menuItem.getKey());
             

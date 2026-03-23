@@ -22,5 +22,7 @@ public abstract class SlideItem implements SlideComponent
         this.level = level;
     }
 
-    public String getText;
+    public abstract String getText;
+
+    public abstract String getText();
 }

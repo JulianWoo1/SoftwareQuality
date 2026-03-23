@@ -44,4 +44,10 @@ public class BitmapItem extends SlideItem
 
         graphics.drawImage(this.bufferedImage, x + indent, y, null);
     }
+
+    @Override
+    public String getText()
+    {
+        return this.filePath;
+    }
 }

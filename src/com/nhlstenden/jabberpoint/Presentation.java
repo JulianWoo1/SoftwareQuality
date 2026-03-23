@@ -112,6 +112,12 @@ public class Presentation implements SlideComponent
     public void savePresentationToXMLFile(String path) 
     {
         XMLSerializer serializer = new XMLSerializer();
+        serializer.setTitle(this.title);
+
+        for(Slide slide : this.slides)
+        {
+            serializer.addSlide(slide);
+        }
 
         try
         {

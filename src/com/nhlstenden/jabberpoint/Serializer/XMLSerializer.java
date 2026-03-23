@@ -2,6 +2,7 @@ package com.nhlstenden.jabberpoint.Serializer;
 
 import com.nhlstenden.jabberpoint.Slide;
 import com.nhlstenden.jabberpoint.SlideItem;
+import com.nhlstenden.jabberpoint.SlideItems.BitmapItem;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,6 +35,26 @@ public class XMLSerializer
         this.slides = new ArrayList<>();
     }
 
+    public String getTitle()
+    {
+        return this.title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public List<Slide> getSlides()
+    {
+        return this.slides;
+    }
+
+    public void setSlides(List<Slide> slides)
+    {
+        this.slides = slides;
+    }
+
     public void addSlide(Slide slide)
     {
         this.slides.add(slide);
@@ -48,7 +69,7 @@ public class XMLSerializer
         Element root = doc.createElement("presentation");
         doc.appendChild(root);
 
-        Element titleElement = doc.createElement("title");
+        Element titleElement = doc.createElement("showtitle");
         titleElement.appendChild(doc.createTextNode(this.title));
         root.appendChild(titleElement);
 
@@ -56,12 +77,16 @@ public class XMLSerializer
         {
             Element slideElement = doc.createElement("slide");
 
+            Element slideTitleElement = doc.createElement("title");
+            slideTitleElement.appendChild(doc.createTextNode(slide.getTitle()));
+            slideElement.appendChild(slideTitleElement);
+
             for(SlideItem slideItem : slide.getSlideItems())
             {
                 Element itemElement = doc.createElement("item");
                 itemElement.setAttribute("level", String.valueOf(slideItem.getLevel()));
-                itemElement.appendChild(doc.createTextNode(slideItem.getText));
-
+                itemElement.setAttribute("kind", slideItem instanceof BitmapItem ? "image" : "text");
+                itemElement.appendChild(doc.createTextNode(slideItem.getText()));
                 slideElement.appendChild(itemElement);
             }
 
