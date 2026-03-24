@@ -2,46 +2,54 @@ package com.nhlstenden.jabberpoint.Serializer;
 
 import com.nhlstenden.jabberpoint.Presentation;
 import com.nhlstenden.jabberpoint.Slide;
-import com.nhlstenden.jabberpoint.SlideItems.BitmapItem;
-import com.nhlstenden.jabberpoint.SlideItems.TextItem;
 import org.w3c.dom.Element;
 
-import java.io.IOException;
-
-public class SlideLoaderVisitor implements XMLVisitor {
-    
+public class SlideLoaderVisitor implements XMLVisitor
+{
+    private final Presentation presentation;
+    private final SlideItemFactory slideItemFactory;
     private Slide activeSlide;
 
-    @Override
-    public void visit(Element element)
+    public SlideLoaderVisitor(Presentation presentation, SlideItemFactory slideItemFactory)
     {
-        Presentation presentation = Presentation.getInstance();
-        String tag = element.getTagName();
-        
-        switch (tag)
+        this.presentation = presentation;
+        this.slideItemFactory = slideItemFactory;
+    }
+
+    @Override
+    public void visitPresentation(Element element)
+    {
+        this.activeSlide = null;
+    }
+
+    @Override
+    public void visitShowTitle(Element element)
+    {
+        this.presentation.setTitle(element.getTextContent());
+    }
+
+    @Override
+    public void visitSlide(Element element)
+    {
+        this.activeSlide = new Slide();
+        this.presentation.getSlides().add(this.activeSlide);
+    }
+
+    @Override
+    public void visitTitle(Element element)
+    {
+        if (this.activeSlide != null)
         {
-            case "showtitle": {
-                presentation.setTitle(element.getTextContent());
-                break;
-            }
-            case "slide": {
-                this.activeSlide = new Slide();
-                Presentation.getInstance().getSlides().add(this.activeSlide);
-                break;
-            }
-            case "title":
-            {
-                assert this.activeSlide != null;
-                this.activeSlide.setTitle(element.getTextContent());
-                break;
-            }
-            case "item":
-            {
-                assert this.activeSlide != null;
-                
-                loadSlideItem(element);
-                break;
-            }
+            this.activeSlide.setTitle(element.getTextContent());
+        }
+    }
+
+    @Override
+    public void visitItem(Element element)
+    {
+        if (this.activeSlide != null)
+        {
+            loadSlideItem(element);
         }
     }
 
@@ -50,25 +58,7 @@ public class SlideLoaderVisitor implements XMLVisitor {
         String kind = element.getAttribute("kind");
         int level = Integer.parseInt(element.getAttribute("level"));
         String content = element.getTextContent();
-        
-        switch (kind)
-        {
-            case "text":
-            {
-                this.activeSlide.addSlideItem(new TextItem(level, content));
-                break;
-            }
-            
-            case "image": {
-                try
-                {
-                    this.activeSlide.addSlideItem(new BitmapItem(level, content));
-                } catch (IOException e)
-                {
-                    throw new RuntimeException(e);
-                }
-                break;
-            }
-        }
+
+        this.activeSlide.addSlideItem(this.slideItemFactory.create(kind, level, content));
     }
 }

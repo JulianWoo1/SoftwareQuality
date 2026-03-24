@@ -2,7 +2,7 @@ package com.nhlstenden.jabberpoint.Serializer;
 
 import com.nhlstenden.jabberpoint.Slide;
 import com.nhlstenden.jabberpoint.SlideItem;
-import com.nhlstenden.jabberpoint.SlideItems.BitmapItem;
+import com.nhlstenden.jabberpoint.Presentation;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -10,12 +10,10 @@ import org.xml.sax.SAXException;
 
 import org.w3c.dom.Document;
 
-import javax.xml.crypto.dsig.Transform;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -25,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XMLSerializer
+public class XMLSerializer implements PresentationSerializer
 {
     private String title;
     private List<Slide> slides;
@@ -85,7 +83,7 @@ public class XMLSerializer
             {
                 Element itemElement = doc.createElement("item");
                 itemElement.setAttribute("level", String.valueOf(slideItem.getLevel()));
-                itemElement.setAttribute("kind", slideItem instanceof BitmapItem ? "image" : "text");
+                itemElement.setAttribute("kind", slideItem.getKind());
                 itemElement.appendChild(doc.createTextNode(slideItem.getText()));
                 slideElement.appendChild(itemElement);
             }
@@ -100,21 +98,53 @@ public class XMLSerializer
 
         transformer.transform(source, result);
     }
-
-    public void load(String path) throws ParserConfigurationException, IOException, SAXException
+    
+    @Override
+    public void loadToPresentation(String path, Presentation presentation) throws Exception
     {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new File(path));
 
-        traverse(document.getDocumentElement(), new SlideLoaderVisitor());
+        traverse(document.getDocumentElement(), new SlideLoaderVisitor(presentation, new DefaultSlideItemFactory()));
+    }
+
+    @Override
+    public void saveFromPresentation(String path, Presentation presentation) throws Exception
+    {
+        this.title = presentation.getTitle();
+        this.slides.clear();
+        this.slides.addAll(presentation.getSlides());
+        save(path);
     }
 
     private void traverse(Node node, XMLVisitor visitor)
     {
         if (node.getNodeType() == Node.ELEMENT_NODE)
         {
-            visitor.visit((Element) node);
+            Element element = (Element) node;
+            String tag = element.getTagName();
+
+            switch (tag)
+            {
+                case "presentation":
+                    visitor.visitPresentation(element);
+                    break;
+                case "showtitle":
+                    visitor.visitShowTitle(element);
+                    break;
+                case "slide":
+                    visitor.visitSlide(element);
+                    break;
+                case "title":
+                    visitor.visitTitle(element);
+                    break;
+                case "item":
+                    visitor.visitItem(element);
+                    break;
+                default:
+                    break;
+            }
         }
 
         NodeList children = node.getChildNodes();

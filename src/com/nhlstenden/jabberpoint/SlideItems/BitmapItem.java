@@ -50,4 +50,10 @@ public class BitmapItem extends SlideItem
     {
         return this.filePath;
     }
+
+    @Override
+    public String getKind()
+    {
+        return "image";
+    }
 }

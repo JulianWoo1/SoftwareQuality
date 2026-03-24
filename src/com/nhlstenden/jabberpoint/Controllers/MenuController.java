@@ -1,74 +1,43 @@
 package com.nhlstenden.jabberpoint.Controllers;
 
-import com.nhlstenden.jabberpoint.Presentation;
-import com.nhlstenden.jabberpoint.WindowFrame;
-
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MenuController extends MenuBar
 {
-    private WindowFrame windowFrame;
-    private HashMap<String, HashMap<String, Runnable>> menuBar = new HashMap<>(){{
-        put("File", new HashMap<>(){{
-            put("Open",() -> {
-                JFileChooser chooser = new JFileChooser();
+    private final Map<String, Map<String, Runnable>> menuBar;
 
-                if(chooser.showOpenDialog(MenuController.this.windowFrame) == JFileChooser.APPROVE_OPTION)
-                {
-                    Presentation.getInstance().loadPresentationFromXMLFile(chooser.getSelectedFile().getAbsolutePath());
-                }
-            });
-            put("New", () -> Presentation.getInstance().clearPresentation());
-            put("Save",() -> {
-                JFileChooser chooser = new JFileChooser();
-
-                if(chooser.showSaveDialog(MenuController.this.windowFrame) == JFileChooser.APPROVE_OPTION)
-                {
-                    Presentation.getInstance().savePresentationToXMLFile(chooser.getSelectedFile().getAbsolutePath());
-                }
-            });
-            put("Exit", () -> System.exit(0));
-        }});
-        put("View", new HashMap<>(){{
-            put("Next", () -> Presentation.getInstance().nextSlide());
-            put("Previous", () -> Presentation.getInstance().previousSlide());
-            put("Goto", () -> {
-                String pageNumberStr = JOptionPane.showInputDialog("Page Number?");
-                int pageNumber = Integer.parseInt(pageNumberStr);
-                Presentation.getInstance().setCurrentSlide(pageNumber - 1);
-            });
-        }});
-        put("Help", new HashMap<>(){{
-            put("About", () ->
-            {
-                
-            });
-        }});
-    }};
-    
-    
-    public MenuController(WindowFrame window)
+    public MenuController(PresentationActions actions)
     {
-        this.windowFrame = window;
-        
-        for (Map.Entry<String, HashMap<String, Runnable>> menuItem : this.menuBar.entrySet())
+        this.menuBar = new LinkedHashMap<>() {{
+            put("File", new LinkedHashMap<>() {{
+                put("Open", actions::openPresentation);
+                put("New", actions::newPresentation);
+                put("Save", actions::savePresentation);
+                put("Exit", actions::exitApplication);
+            }});
+            put("View", new LinkedHashMap<>() {{
+                put("Next", actions::nextSlide);
+                put("Previous", actions::previousSlide);
+                put("Goto", actions::gotoSlide);
+            }});
+            put("Help", new LinkedHashMap<>() {{
+                put("About", actions::showAbout);
+            }});
+        }};
+
+        for (Map.Entry<String, Map<String, Runnable>> menuItem : this.menuBar.entrySet())
         {
             Menu menu = new Menu(menuItem.getKey());
-            
-            for(Map.Entry<String, Runnable> menuItemItem : menuItem.getValue().entrySet())
+
+            for (Map.Entry<String, Runnable> menuItemItem : menuItem.getValue().entrySet())
             {
                 MenuItem item = new MenuItem(menuItemItem.getKey(), new MenuShortcut(menuItemItem.getKey().charAt(0)));
-                item.addActionListener((action) -> {
-                    menuItemItem.getValue().run();
-                });
+                item.addActionListener((action) -> menuItemItem.getValue().run());
                 menu.add(item);
             }
-            
+
             add(menu);
         }
     }

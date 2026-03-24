@@ -1,11 +1,8 @@
 package com.nhlstenden.jabberpoint;
 
 import com.nhlstenden.jabberpoint.Serializer.XMLSerializer;
+import com.nhlstenden.jabberpoint.Serializer.PresentationSerializer;
 
-import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +23,37 @@ public class Presentation implements SlideComponent
                 }
             }
         }
+        
         return instance;
     }
 
     private String title;
     private List<Slide> slides = new ArrayList<>();
     private int currentSlide;
+    private final List<PresentationChangeListener> changeListeners = new ArrayList<>();
+    private PresentationSerializer serializer;
 
     private Presentation()
     {
+        this.serializer = new XMLSerializer();
+    }
+
+    public void setSerializer(PresentationSerializer serializer)
+    {
+        this.serializer = serializer;
+    }
+
+    public void addChangeListener(PresentationChangeListener listener)
+    {
+        this.changeListeners.add(listener);
+    }
+
+    private void notifyChanged()
+    {
+        for (PresentationChangeListener listener : this.changeListeners)
+        {
+            listener.onPresentationChanged();
+        }
     }
 
     public String getTitle()
@@ -55,6 +74,7 @@ public class Presentation implements SlideComponent
     public void setSlides(List<Slide> slides)
     {
         this.slides = slides;
+        notifyChanged();
     }
 
     public int getCurrentSlide()
@@ -64,24 +84,23 @@ public class Presentation implements SlideComponent
 
     public void setCurrentSlide(int currentSlide)
     {
-        if (currentSlide > this.slides.size() || currentSlide < 0)
+        if (currentSlide >= this.slides.size() || currentSlide < 0)
         {
             return;
         }
         this.currentSlide = currentSlide;
-        
-        WindowPainter.DoRepaint();
+        notifyChanged();
     }
 
     public void nextSlide()
     {
-        if (this.currentSlide + 1 > this.slides.size())
+        if (this.currentSlide + 1 >= this.slides.size())
         {
             return;
         }
 
         this.currentSlide++;
-        WindowPainter.DoRepaint();
+        notifyChanged();
     }
 
     public void previousSlide()
@@ -91,37 +110,32 @@ public class Presentation implements SlideComponent
             return;
         }
         this.currentSlide--;
-        WindowPainter.DoRepaint();
+        notifyChanged();
     }
 
     public void loadPresentationFromXMLFile(String path)
     {
         clearPresentation();
-        XMLSerializer serializer = new XMLSerializer();
-        
+
         try
         {
-            serializer.load(path);
+            this.serializer.loadToPresentation(path, this);
         } catch (Exception e)
         {
             System.out.printf("Could not load presentation \"%s\": %s%n", path, e.getMessage());
         }
-        setCurrentSlide(0);
+
+        if (!this.slides.isEmpty())
+        {
+            setCurrentSlide(0);
+        }
     }
 
     public void savePresentationToXMLFile(String path) 
     {
-        XMLSerializer serializer = new XMLSerializer();
-        serializer.setTitle(this.title);
-
-        for(Slide slide : this.slides)
-        {
-            serializer.addSlide(slide);
-        }
-
         try
         {
-            serializer.save(path);
+            this.serializer.saveFromPresentation(path, this);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -132,9 +146,8 @@ public class Presentation implements SlideComponent
         this.currentSlide = 0;
         this.slides.clear();
         this.title = "Unknown presentation";
-        WindowPainter.DoRepaint();
+        notifyChanged();
     }
-
 
     @Override
     public void draw(Graphics graphics, int x, int y)

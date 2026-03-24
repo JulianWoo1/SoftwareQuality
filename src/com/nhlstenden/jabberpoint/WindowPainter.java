@@ -3,24 +3,26 @@ package com.nhlstenden.jabberpoint;
 import javax.swing.*;
 import java.awt.*;
 
-public class WindowPainter extends JComponent
+public class WindowPainter extends JComponent implements PresentationChangeListener
 {
-    private static WindowPainter instance;
+    private final Presentation presentation;
 
-    public WindowPainter()
+    public WindowPainter(Presentation presentation)
     {
-        instance = this;
+        this.presentation = presentation;
+        this.presentation.addChangeListener(this);
     }
 
     @Override
     protected void paintComponent(Graphics g)
     {
         g.clearRect(0, 0, getWidth(), getHeight());
-        Presentation.getInstance().draw(g, 0, 0);
+        this.presentation.draw(g, 0, 0);
     }
 
-    public static void DoRepaint()
+    @Override
+    public void onPresentationChanged()
     {
-        instance.repaint();
+        repaint();
     }
 }

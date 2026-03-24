@@ -37,4 +37,10 @@ public class TextItem extends SlideItem
     {
         return this.textValue;
     }
+
+    @Override
+    public String getKind()
+    {
+        return "text";
+    }
 }
