@@ -7,7 +7,7 @@ import java.util.List;
 public class Slide implements SlideComponent
 {
     private String title;
-    private List<SlideItem> slideItems = new ArrayList<>();
+    private final List<SlideItem> slideItems = new ArrayList<>();
 
     public String getTitle()
     {
