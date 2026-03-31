@@ -25,19 +25,18 @@ class KeybindControllerTest
         }
 
         @Override
-        public void nextSlide() {
-            nextCalled = true;
-        }
+        public void nextSlide() { nextCalled = true; }
 
         @Override
-        public void previousSlide() {
-            previousCalled = true;
-        }
+        public void previousSlide() { previousCalled = true; }
 
         @Override
-        public void exitApplication() {
-            exitCalled = true;
-        }
+        public void exitApplication() { exitCalled = true; }
+    }
+
+    private KeyEvent key(int keyCode)
+    {
+        return new KeyEvent(new Button(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, keyCode, KeyEvent.CHAR_UNDEFINED);
     }
 
     @BeforeEach
@@ -48,34 +47,65 @@ class KeybindControllerTest
     }
 
     @Test
-    void keyPressed_DownKey_ShouldCallNextSlide()
+    void keyPressed_PageDown_ShouldCallNextSlide()
     {
-        controller.keyPressed(new KeyEvent(new Button(), 1, 1, 0, KeyEvent.VK_DOWN));
-
+        controller.keyPressed(key(KeyEvent.VK_PAGE_DOWN));
         assertTrue(actions.nextCalled);
     }
 
     @Test
-    void keyPressed_UpKey_ShouldCallPreviousSlide()
+    void keyPressed_Down_ShouldCallNextSlide()
     {
-        controller.keyPressed(new KeyEvent(new Button(), 1, 1, 0, KeyEvent.VK_UP));
+        controller.keyPressed(key(KeyEvent.VK_DOWN));
+        assertTrue(actions.nextCalled);
+    }
 
+    @Test
+    void keyPressed_Enter_ShouldCallNextSlide()
+    {
+        controller.keyPressed(key(KeyEvent.VK_ENTER));
+        assertTrue(actions.nextCalled);
+    }
+
+    @Test
+    void keyPressed_Plus_ShouldCallNextSlide()
+    {
+        controller.keyPressed(key(KeyEvent.VK_PLUS));
+        assertTrue(actions.nextCalled);
+    }
+
+    @Test
+    void keyPressed_PageUp_ShouldCallPreviousSlide()
+    {
+        controller.keyPressed(key(KeyEvent.VK_PAGE_UP));
         assertTrue(actions.previousCalled);
     }
 
     @Test
-    void keyPressed_QKey_ShouldCallExitApplication()
+    void keyPressed_Up_ShouldCallPreviousSlide()
     {
-        controller.keyPressed(new KeyEvent(new Button(), 1, 1, 0, KeyEvent.VK_Q));
+        controller.keyPressed(key(KeyEvent.VK_UP));
+        assertTrue(actions.previousCalled);
+    }
 
+    @Test
+    void keyPressed_Minus_ShouldCallPreviousSlide()
+    {
+        controller.keyPressed(key(KeyEvent.VK_MINUS));
+        assertTrue(actions.previousCalled);
+    }
+
+    @Test
+    void keyPressed_Q_ShouldCallExitApplication()
+    {
+        controller.keyPressed(key(KeyEvent.VK_Q));
         assertTrue(actions.exitCalled);
     }
 
     @Test
     void keyPressed_UnknownKey_ShouldDoNothing()
     {
-        controller.keyPressed(new KeyEvent(new Button(), 1, 1, 0, KeyEvent.VK_A));
-
+        controller.keyPressed(key(KeyEvent.VK_A));
         assertFalse(actions.nextCalled);
         assertFalse(actions.previousCalled);
         assertFalse(actions.exitCalled);

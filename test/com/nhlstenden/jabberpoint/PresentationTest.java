@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PresentationTest
 {
-    private  Presentation presentation;
+    private Presentation presentation;
 
     @BeforeEach
     void setup()
@@ -20,7 +21,7 @@ class PresentationTest
     }
 
     @Test
-    void testSetCurrentSlide_ValidIndex_ShouldReturnOne()
+    void testSetCurrentSlide_ValidIndex_ShouldChange()
     {
         presentation.getSlides().add(new Slide());
         presentation.getSlides().add(new Slide());
@@ -31,38 +32,34 @@ class PresentationTest
     }
 
     @Test
-    void testSetCurrentSlide_InvalidIndex_ShouldNotChange()
+    void testSetCurrentSlide_IndexEqualToSize_ShouldNotChange()
     {
         presentation.getSlides().add(new Slide());
-        presentation.setCurrentSlide(0);
-
+        presentation.setCurrentSlide(1);
         assertEquals(0, presentation.getCurrentSlide());
     }
+
     @Test
     void testSetCurrentSlide_NegativeIndex_ShouldNotChange()
     {
         presentation.getSlides().add(new Slide());
-        presentation.setCurrentSlide(0);
-
         presentation.setCurrentSlide(-1);
-
         assertEquals(0, presentation.getCurrentSlide());
     }
 
     @Test
-    void testNextSlide_CurrentSlideZero_ShouldReturnOne()
+    void testNextSlide_ShouldAdvance()
     {
         presentation.getSlides().add(new Slide());
         presentation.getSlides().add(new Slide());
 
-        presentation.setCurrentSlide(0);
         presentation.nextSlide();
 
         assertEquals(1, presentation.getCurrentSlide());
     }
 
     @Test
-    void testNextSlide_CurrentSlideIsLastSlide_ShouldNotChange()
+    void testNextSlide_OnLastSlide_ShouldNotAdvance()
     {
         presentation.getSlides().add(new Slide());
         presentation.getSlides().add(new Slide());
@@ -74,7 +71,7 @@ class PresentationTest
     }
 
     @Test
-    void testPreviousSlide_CurrentSlideIsOne_ShouldReturnZero()
+    void testPreviousSlide_ShouldGoBack()
     {
         presentation.getSlides().add(new Slide());
         presentation.getSlides().add(new Slide());
@@ -86,21 +83,17 @@ class PresentationTest
     }
 
     @Test
-    void testPreviousSlide_CurrentSlideIsFirstSlide_ShouldNotChange()
+    void testPreviousSlide_OnFirstSlide_ShouldNotGoBack()
     {
         presentation.getSlides().add(new Slide());
-
-        presentation.setCurrentSlide(0);
         presentation.previousSlide();
-
         assertEquals(0, presentation.getCurrentSlide());
     }
 
     @Test
-    void testClearPresentation_PresentationCleared_SlidesShouldBeEmptyTitleShouldBeUnknownPresentation()
+    void testClearPresentation_ShouldResetSlidesTitleAndIndex()
     {
         presentation.getSlides().add(new Slide());
-        presentation.setCurrentSlide(1);
         presentation.setTitle("test");
 
         presentation.clearPresentation();
@@ -111,12 +104,82 @@ class PresentationTest
     }
 
     @Test
-    void testSingleton_SameInstances_ShouldReturnSameInstance()
+    void testSingleton_ShouldReturnSameInstance()
     {
-        Presentation presentation1 = Presentation.getInstance();
-        Presentation presentation2 = Presentation.getInstance();
+        assertSame(Presentation.getInstance(), Presentation.getInstance());
+    }
 
-        assertSame(presentation1, presentation2);
+    @Test
+    void testSetSlides_ShouldReplaceExistingSlides()
+    {
+        presentation.getSlides().add(new Slide());
+
+        ArrayList<Slide> newSlides = new ArrayList<>();
+        newSlides.add(new Slide());
+        newSlides.add(new Slide());
+        presentation.setSlides(newSlides);
+
+        assertEquals(2, presentation.getSlides().size());
+    }
+
+    @Test
+    void testChangeListener_NotifiedOnNextSlide()
+    {
+        presentation.getSlides().add(new Slide());
+        presentation.getSlides().add(new Slide());
+
+        boolean[] notified = {false};
+        presentation.addChangeListener(() -> notified[0] = true);
+        presentation.nextSlide();
+
+        assertTrue(notified[0]);
+    }
+
+    @Test
+    void testChangeListener_NotifiedOnPreviousSlide()
+    {
+        presentation.getSlides().add(new Slide());
+        presentation.getSlides().add(new Slide());
+        presentation.setCurrentSlide(1);
+
+        boolean[] notified = {false};
+        presentation.addChangeListener(() -> notified[0] = true);
+        presentation.previousSlide();
+
+        assertTrue(notified[0]);
+    }
+
+    @Test
+    void testChangeListener_NotifiedOnClear()
+    {
+        boolean[] notified = {false};
+        presentation.addChangeListener(() -> notified[0] = true);
+        presentation.clearPresentation();
+
+        assertTrue(notified[0]);
+    }
+
+    @Test
+    void testChangeListener_NotifiedOnSetSlides()
+    {
+        boolean[] notified = {false};
+        presentation.addChangeListener(() -> notified[0] = true);
+        presentation.setSlides(new ArrayList<>());
+
+        assertTrue(notified[0]);
+    }
+
+    @Test
+    void testChangeListener_NotifiedOnSetCurrentSlide()
+    {
+        presentation.getSlides().add(new Slide());
+        presentation.getSlides().add(new Slide());
+
+        boolean[] notified = {false};
+        presentation.addChangeListener(() -> notified[0] = true);
+        presentation.setCurrentSlide(1);
+
+        assertTrue(notified[0]);
     }
 
     @Test

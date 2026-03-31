@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
@@ -35,50 +34,25 @@ class SlideLoaderVisitorTest
     }
 
     @Test
-    void visitSlide_ShouldAddSlide()
-    {
-
-        SlideLoaderVisitor visitor = new SlideLoaderVisitor(presentation, new DefaultSlideItemFactory());
-
-        visitor.visitSlide(null);
-
-        assertEquals(1, presentation.getSlides().size());
-    }
-
-    @Test
-    void testVisitItem_ValidXML_ShouldAddSlideItem() throws Exception
-    {
-        Element itemElement = parseElement("<item kind=\"text\" level=\"1\">Hello</item>");
-
-        visitor.visitSlide(parseElement("<slide/>"));
-        visitor.visitItem(itemElement);
-
-        assertEquals(1, presentation.getSlides().get(0).getSlideItems().size());
-    }
-
-    @Test
-    void testVisitShowTitle_ShouldSetPresentationTitle() throws Exception
-    {
-        Element showTitle = parseElement("<showtitle>My Presentation</showtitle>");
-        visitor.visitShowTitle(showTitle);
-        assertEquals("My Presentation", presentation.getTitle());
-    }
-
-    @Test
     void testVisitSlide_ShouldAddNewSlide() throws Exception
     {
-        Element slideElement = parseElement("<slide/>");
-        visitor.visitSlide(slideElement);
+        visitor.visitSlide(parseElement("<slide/>"));
         assertEquals(1, presentation.getSlides().size());
     }
 
     @Test
     void testVisitSlide_TwoCalls_ShouldAddTwoSlides() throws Exception
     {
-        Element slideElement = parseElement("<slide/>");
-        visitor.visitSlide(slideElement);
-        visitor.visitSlide(slideElement);
+        visitor.visitSlide(parseElement("<slide/>"));
+        visitor.visitSlide(parseElement("<slide/>"));
         assertEquals(2, presentation.getSlides().size());
+    }
+
+    @Test
+    void testVisitShowTitle_ShouldSetPresentationTitle() throws Exception
+    {
+        visitor.visitShowTitle(parseElement("<showtitle>My Presentation</showtitle>"));
+        assertEquals("My Presentation", presentation.getTitle());
     }
 
     @Test
@@ -86,7 +60,6 @@ class SlideLoaderVisitorTest
     {
         visitor.visitSlide(parseElement("<slide/>"));
         visitor.visitTitle(parseElement("<title>Slide One</title>"));
-
         assertEquals("Slide One", presentation.getSlides().get(0).getTitle());
     }
 
@@ -94,10 +67,26 @@ class SlideLoaderVisitorTest
     void testVisitTitle_WithoutActiveSlide_ShouldNotThrow() throws Exception
     {
         visitor.visitPresentation(parseElement("<presentation/>"));
+        assertDoesNotThrow(() -> visitor.visitTitle(parseElement("<title>No Slide</title>")));
+    }
 
-        assertDoesNotThrow(() ->
-                visitor.visitTitle(parseElement("<title>No Slide</title>"))
-        );
+    @Test
+    void testVisitItem_ValidXML_ShouldAddSlideItem() throws Exception
+    {
+        visitor.visitSlide(parseElement("<slide/>"));
+        visitor.visitItem(parseElement("<item kind=\"text\" level=\"1\">Hello</item>"));
+        assertEquals(1, presentation.getSlides().get(0).getSlideItems().size());
+    }
+
+    @Test
+    void testVisitItem_ShouldHaveCorrectLevelAndContent() throws Exception
+    {
+        visitor.visitSlide(parseElement("<slide/>"));
+        visitor.visitItem(parseElement("<item kind=\"text\" level=\"3\">Detail text</item>"));
+
+        Slide slide = presentation.getSlides().get(0);
+        assertEquals(3, slide.getSlideItems().get(0).getLevel());
+        assertEquals("Detail text", slide.getSlideItems().get(0).getText());
     }
 
     @Test
@@ -105,7 +94,6 @@ class SlideLoaderVisitorTest
     {
         visitor.visitPresentation(parseElement("<presentation/>"));
         visitor.visitItem(parseElement("<item kind=\"text\" level=\"1\">Orphan</item>"));
-
         assertTrue(presentation.getSlides().isEmpty());
     }
 
@@ -119,18 +107,4 @@ class SlideLoaderVisitorTest
 
         assertNull(presentation.getSlides().get(0).getTitle());
     }
-
-    @Test
-    void testVisitItem_TextItem_ShouldHaveCorrectLevelAndContent() throws Exception
-    {
-        visitor.visitSlide(parseElement("<slide/>"));
-        visitor.visitItem(parseElement("<item kind=\"text\" level=\"3\">Detail text</item>"));
-
-        Slide slide = presentation.getSlides().get(0);
-        assertEquals(1, slide.getSlideItems().size());
-        assertEquals(3, slide.getSlideItems().get(0).getLevel());
-        assertEquals("Detail text", slide.getSlideItems().get(0).getText());
-    }
-
-
 }
