@@ -37,7 +37,6 @@ public class Presentation implements SlideComponent
     private List<Slide> slides = new ArrayList<>();
     private int currentSlide;
     private final List<PresentationChangeListener> changeListeners = new ArrayList<>();
-    private PresentationSerializer serializer;
 
     private Presentation()
     {
