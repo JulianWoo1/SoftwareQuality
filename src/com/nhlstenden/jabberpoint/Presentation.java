@@ -9,6 +9,12 @@ import java.util.List;
 
 public class Presentation implements SlideComponent
 {
+    private PresentationSerializer serializer;
+
+    // D (Dependency Inversion Principle):
+    // The Presentation class depends on the abstraction (PresentationSerializer)
+    // instead of a concrete implementation.
+    // This allows different serializers to be used interchangeably.
     private static volatile Presentation instance;
 
     public static Presentation getInstance()

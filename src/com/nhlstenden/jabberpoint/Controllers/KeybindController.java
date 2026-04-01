@@ -6,6 +6,9 @@ import java.awt.event.KeyEvent;
 public class KeybindController extends KeyAdapter
 {
     private final PresentationActions actions;
+    // S (Single Responsibility Principle):
+    // This class is only responsible for handling keyboard input
+    // and delegating actions. It does not handle presentation logic itself.
 
     public KeybindController(PresentationActions actions)
     {

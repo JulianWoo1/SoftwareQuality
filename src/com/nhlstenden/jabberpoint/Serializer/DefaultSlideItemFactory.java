@@ -10,6 +10,11 @@ import java.util.Map;
 
 public class DefaultSlideItemFactory implements SlideItemFactory
 {
+    // O (Open/Closed Principle):
+    // This factory is open for extension but closed for modification.
+    // New SlideItem types can be added by inserting new creators into the map
+    // without modifying existing logic in the create() method.
+
     private interface ItemCreator
     {
         SlideItem create(int level, String content);
