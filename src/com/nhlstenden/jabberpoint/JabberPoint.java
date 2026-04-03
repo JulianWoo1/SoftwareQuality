@@ -2,7 +2,8 @@ package com.nhlstenden.jabberpoint;
 
 public class JabberPoint
 {
-    public static void main(String[] argv) {
+    public static void main(String[] argv)
+    {
         new WindowFrame();
 
         if(argv.length == 0)

@@ -2,6 +2,12 @@ name: Acceptance (Java)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - accept
+  pull_request:
+    branches:
+      - accept
 
 jobs:
   acceptance:
@@ -17,5 +23,36 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Acceptance placeholder
-        run: echo "Acceptance tests go here"
+      - name: Download JUnit Platform Console
+        run: |
+          curl -sSL -o junit-platform-console-standalone.jar \
+            https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.2/junit-platform-console-standalone-1.10.2.jar
+
+      - name: Compile sources
+        run: |
+          mkdir -p out/classes
+          find src -name "*.java" > sources.txt
+          javac -encoding UTF-8 -d out/classes @sources.txt
+
+      - name: Compile tests
+        run: |
+          mkdir -p out/test-classes
+          find test -name "*.java" > tests.txt
+          javac -encoding UTF-8 -cp "out/classes:junit-platform-console-standalone.jar" -d out/test-classes @tests.txt
+
+      - name: Run acceptance tests
+        run: |
+          java -Djava.awt.headless=true -jar junit-platform-console-standalone.jar execute \
+            --class-path "out/classes:out/test-classes" \
+            --scan-class-path
+
+      - name: Build acceptance JAR
+        run: |
+          echo "Main-Class: com.nhlstenden.jabberpoint.JabberPoint" > manifest.mf
+          jar cfm out/JabberPoint-acceptance.jar manifest.mf -C out/classes .
+
+      - name: Upload acceptance artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-jar
+          path: out/JabberPoint-acceptance.jar
