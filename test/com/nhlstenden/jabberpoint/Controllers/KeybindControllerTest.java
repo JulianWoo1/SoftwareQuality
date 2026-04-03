@@ -36,7 +36,8 @@ class KeybindControllerTest
 
     private KeyEvent key(int keyCode)
     {
-        return new KeyEvent(new Button(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, keyCode, KeyEvent.CHAR_UNDEFINED);
+        Component source = new Component() {};
+        return new KeyEvent(source, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, keyCode, KeyEvent.CHAR_UNDEFINED);
     }
 
     @BeforeEach
