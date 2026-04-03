@@ -7,6 +7,8 @@ import com.nhlstenden.jabberpoint.SlideItems.TextItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultSlideItemFactoryTest
@@ -30,7 +32,8 @@ class DefaultSlideItemFactoryTest
     @Test
     void testCreate_CreateImageItem_ShouldReturnBitmapItem()
     {
-        String path = getClass().getResource("/test.jpg").getPath();
+        String path = Path.of("logo-woordmerk_ou.gif").toAbsolutePath().toString();
+        assertTrue(Path.of(path).toFile().exists());
         SlideItem item = defaultSlideItemFactory.create("image", 1, path);
 
         assertInstanceOf(BitmapItem.class, item);
