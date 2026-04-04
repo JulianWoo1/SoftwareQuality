@@ -1,0 +1,6 @@
+out.lnk
+bin
+docs
+.idea
+out
+junit-platform-console-standalone.jar

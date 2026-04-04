@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE presentation SYSTEM "jabberpoint.dtd">
+<presentation>
+	<showtitle>Cool Presentation</showtitle>
+	<slide>
+		<title>Cool example</title>
+		<item kind="text"  level="1">Wassup</item>
+	</slide>
+</presentation>
