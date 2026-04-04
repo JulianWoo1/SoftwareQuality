@@ -8,7 +8,8 @@ public class JabberPoint
         if(argv.length == 0)
         {
             Presentation.getInstance().loadPresentationFromXMLFile("demo.xml");
-        } else
+        }
+        else
         {
             Presentation.getInstance().loadPresentationFromXMLFile(argv[0]);
         }
