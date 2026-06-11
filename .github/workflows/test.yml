@@ -3,11 +3,9 @@ name: Test (Java)
 on:
   workflow_dispatch:
   push:
-    branches:
-      - test
+    branches: [test]
   pull_request:
-    branches:
-      - test
+    branches: [test]
 
 jobs:
   test:
@@ -16,6 +14,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Run Checkstyle
+        run: |
+          curl -sSL -o checkstyle.jar \
+            https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.4/checkstyle-10.12.4-all.jar
+
+          java -jar checkstyle.jar \
+            -c config/checkstyle/checkstyle.xml \
+            src
 
       - name: Set up JDK
         uses: actions/setup-java@v4
