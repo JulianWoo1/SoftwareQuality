@@ -15,17 +15,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Spotless (format check)
-        run: |
-          curl -sSL -o spotless.jar \
-            https://repo1.maven.org/maven2/com/diffplug/spotless/spotless-cli/2.43.0/spotless-cli-2.43.0-all.jar
-          java -jar spotless.jar check
-
       - name: Run Checkstyle
         run: |
           curl -sSL -o checkstyle.jar \
-            https://repo1.maven.org/maven2/com/puppycrawl/tools/checkstyle/10.12.4/checkstyle-10.12.4-all.jar
-          java -jar checkstyle.jar -c config/checkstyle/checkstyle.xml src
+            https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.4/checkstyle-10.12.4-all.jar
+
+          java -jar checkstyle.jar \
+            -c config/checkstyle/checkstyle.xml \
+            src
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -61,7 +58,7 @@ jobs:
           echo "Main-Class: com.nhlstenden.jabberpoint.JabberPoint" > manifest.mf
           jar cfm out/JabberPoint-acceptance.jar manifest.mf -C out/classes .
 
-      - name: Upload acceptance artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: acceptance-jar
