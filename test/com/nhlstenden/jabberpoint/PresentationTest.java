@@ -32,7 +32,7 @@ class PresentationTest
     }
 
     @Test
-    void testSetCurrentSlide_IndexEqualToSize_ShouldNotChange()
+    void testSetCurrentSlide_EqualToSize_ShouldNotChange()
     {
         presentation.getSlides().add(new Slide());
         presentation.setCurrentSlide(1);

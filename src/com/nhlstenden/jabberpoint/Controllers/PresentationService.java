@@ -55,7 +55,9 @@ public class PresentationService {
 
   public void goTo() {
     String input = JOptionPane.showInputDialog("Slide number?");
-    if (input == null) return;
+    if (input == null) {
+      return;
+    }
 
     try {
       int index = Integer.parseInt(input) - 1;
