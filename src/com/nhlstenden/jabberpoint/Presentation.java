@@ -166,4 +166,8 @@ public class Presentation implements SlideComponent
         Slide slide = this.slides.get(this.currentSlide);
         slide.draw(graphics, x, y);
     }
+
+    public void addSlide(Slide slide) {
+        this.slides.add(slide);
+    }
 }

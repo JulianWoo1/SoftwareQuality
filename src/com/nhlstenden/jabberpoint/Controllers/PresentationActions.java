@@ -74,6 +74,6 @@ public class PresentationActions
 
     public void exitApplication()
     {
-        System.exit(0);
+        this.windowFrame.dispose();
     }
 }
