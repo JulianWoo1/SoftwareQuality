@@ -1,7 +1,7 @@
 package com.nhlstenden.jabberpoint;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import java.awt.Graphics;
 
 public class WindowPainter extends JComponent implements PresentationChangeListener
 {

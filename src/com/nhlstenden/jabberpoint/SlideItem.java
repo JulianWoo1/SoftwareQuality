@@ -7,11 +7,13 @@ public abstract class SlideItem implements SlideComponent
     // SlideItem is expected without breaking behavior.
     protected int level = 0;
 
-    public SlideItem(int level) {
+    protected SlideItem(int level)
+    {
         this.level = level;
     }
     
-    public SlideItem() {
+    public SlideItem()
+    {
         this(0);
     }
 

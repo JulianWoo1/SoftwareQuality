@@ -28,11 +28,9 @@ public class PresentationBuilderVisitor implements NodeVisitor
     @Override
     public void visitSlide(SlideNode node)
     {
-        Slide slide = new Slide();
-        slide.setTitle(node.title);
-
-        presentation.addSlide(slide);
-        currentSlide = slide;
+        currentSlide = new Slide();
+        currentSlide.setTitle(node.title);
+        presentation.addSlide(currentSlide);
     }
 
     @Override
@@ -49,9 +47,7 @@ public class PresentationBuilderVisitor implements NodeVisitor
     {
         if (currentSlide != null)
         {
-            currentSlide.getSlideItems().add(
-                    factory.create(node.kind, node.level, node.text)
-            );
+            currentSlide.addSlideItem(factory.create(node.kind, node.level, node.text));
         }
     }
 }

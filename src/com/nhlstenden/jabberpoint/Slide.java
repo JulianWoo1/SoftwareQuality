@@ -1,6 +1,7 @@
 package com.nhlstenden.jabberpoint;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,18 +14,18 @@ public class Slide implements SlideComponent
     {
         return this.title;
     }
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
 
     public List<SlideItem> getSlideItems()
     {
         return this.slideItems;
     }
 
-    public void setTitle(String title)
+    public void addSlideItem(SlideItem item)
     {
-        this.title = title;
-    }
-    
-    public void addSlideItem(SlideItem item) {
         this.slideItems.add(item);
     }
 
@@ -38,8 +39,7 @@ public class Slide implements SlideComponent
 
         offsetY += 60;
 
-        for(SlideItem item : this.slideItems)
-        {
+        for (SlideItem item : this.slideItems) {
             item.draw(graphics, x + 70, offsetY);
             offsetY += 40;
         }

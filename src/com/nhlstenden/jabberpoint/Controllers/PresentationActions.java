@@ -1,79 +1,22 @@
 package com.nhlstenden.jabberpoint.Controllers;
 
-import com.nhlstenden.jabberpoint.Presentation;
-import com.nhlstenden.jabberpoint.WindowFrame;
-
 import javax.swing.*;
 
 public class PresentationActions
 {
-    private final WindowFrame windowFrame;
-    private final Presentation presentation;
+    private final PresentationService service;
 
-    public PresentationActions(WindowFrame windowFrame, Presentation presentation)
+    public PresentationActions(PresentationService service)
     {
-        this.windowFrame = windowFrame;
-        this.presentation = presentation;
+        this.service = service;
     }
 
-    public void openPresentation()
-    {
-        JFileChooser chooser = new JFileChooser();
-        if (chooser.showOpenDialog(this.windowFrame) == JFileChooser.APPROVE_OPTION)
-        {
-            this.presentation.loadPresentationFromXMLFile(chooser.getSelectedFile().getAbsolutePath());
-        }
-    }
-
-    public void newPresentation()
-    {
-        this.presentation.clearPresentation();
-    }
-
-    public void savePresentation()
-    {
-        JFileChooser chooser = new JFileChooser();
-        if (chooser.showSaveDialog(this.windowFrame) == JFileChooser.APPROVE_OPTION)
-        {
-            this.presentation.savePresentationToXMLFile(chooser.getSelectedFile().getAbsolutePath());
-        }
-    }
-
-    public void nextSlide()
-    {
-        this.presentation.nextSlide();
-    }
-
-    public void previousSlide()
-    {
-        this.presentation.previousSlide();
-    }
-
-    public void gotoSlide()
-    {
-        String pageNumberStr = JOptionPane.showInputDialog("Page Number?");
-        if (pageNumberStr == null)
-        {
-            return;
-        }
-
-        try
-        {
-            int pageNumber = Integer.parseInt(pageNumberStr);
-            this.presentation.setCurrentSlide(pageNumber - 1);
-        } catch (NumberFormatException ignored)
-        {
-            JOptionPane.showMessageDialog(this.windowFrame, "Please enter a valid number.");
-        }
-    }
-
-    public void showAbout()
-    {
-        JOptionPane.showMessageDialog(this.windowFrame, "JabberPoint");
-    }
-
-    public void exitApplication()
-    {
-        this.windowFrame.dispose();
-    }
+    public void openPresentation() { service.open(); }
+    public void newPresentation() { service.clear(); }
+    public void savePresentation() { service.save(); }
+    public void nextSlide() { service.next(); }
+    public void previousSlide() { service.previous(); }
+    public void gotoSlide() { service.goTo(); }
+    public void showAbout() { service.about(); }
+    public void exitApplication() { service.exit(); }
 }

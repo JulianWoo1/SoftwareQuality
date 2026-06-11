@@ -1,41 +1,34 @@
 package com.nhlstenden.jabberpoint;
 
-import com.nhlstenden.jabberpoint.Controllers.KeybindController;
-import com.nhlstenden.jabberpoint.Controllers.MenuController;
-import com.nhlstenden.jabberpoint.Controllers.PresentationActions;
+import com.nhlstenden.jabberpoint.Controllers.*;
+import com.nhlstenden.jabberpoint.Serializer.XMLSerializer;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class WindowFrame extends JFrame
 {
-    private final Presentation presentation;
-    private final PresentationActions actions;
-
-    public WindowFrame() {
-        this.presentation = Presentation.getInstance();
-        this.actions = new PresentationActions(this, this.presentation);
-        this.setupWindow();
-        this.setupMenu();
-        this.setupKeybinds();
-    }
-
-    private void setupWindow()
+    public WindowFrame(Presentation presentation)
     {
-        add(new WindowPainter(this.presentation));
+        XMLSerializer serializer = new XMLSerializer();
+
+        PresentationService service =
+                new PresentationService(presentation, serializer, this);
+
+        PresentationActions actions = new PresentationActions(service);
+
+        add(new WindowPainter(presentation));
+
         setSize(new Dimension(1200, 800));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("JabberPoint");
+
+        setMenuBar(new MenuController(actions));
+        addKeyListener(new KeybindController(actions));
+
+        setFocusable(true);
+        requestFocusInWindow();
+
         setVisible(true);
-        setTitle("Jabberpoint");
-    }
-    
-    private void setupMenu()
-    {
-        setMenuBar(new MenuController(this.actions));
-    }
-    
-    private void setupKeybinds()
-    {
-        addKeyListener(new KeybindController(this.actions));
     }
 }

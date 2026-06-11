@@ -1,44 +1,36 @@
 package com.nhlstenden.jabberpoint.Controllers;
 
-import java.awt.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
 
 public class MenuController extends MenuBar
 {
-    private final Map<String, Map<String, Runnable>> menuBar;
-
     public MenuController(PresentationActions actions)
     {
-        this.menuBar = new LinkedHashMap<>() {{
-            put("File", new LinkedHashMap<>() {{
-                put("Open", actions::openPresentation);
-                put("New", actions::newPresentation);
-                put("Save", actions::savePresentation);
-                put("Exit", actions::exitApplication);
-            }});
-            put("View", new LinkedHashMap<>() {{
-                put("Next", actions::nextSlide);
-                put("Previous", actions::previousSlide);
-                put("Goto", actions::gotoSlide);
-            }});
-            put("Help", new LinkedHashMap<>() {{
-                put("About", actions::showAbout);
-            }});
-        }};
+        Menu file = new Menu("File");
+        add(file, "Open", actions::openPresentation);
+        add(file, "New", actions::newPresentation);
+        add(file, "Save", actions::savePresentation);
+        add(file, "Exit", actions::exitApplication);
 
-        for (Map.Entry<String, Map<String, Runnable>> menuItem : this.menuBar.entrySet())
-        {
-            Menu menu = new Menu(menuItem.getKey());
+        Menu view = new Menu("View");
+        add(view, "Next", actions::nextSlide);
+        add(view, "Previous", actions::previousSlide);
+        add(view, "Goto", actions::gotoSlide);
 
-            for (Map.Entry<String, Runnable> menuItemItem : menuItem.getValue().entrySet())
-            {
-                MenuItem item = new MenuItem(menuItemItem.getKey(), new MenuShortcut(menuItemItem.getKey().charAt(0)));
-                item.addActionListener((action) -> menuItemItem.getValue().run());
-                menu.add(item);
-            }
+        Menu help = new Menu("Help");
+        add(help, "About", actions::showAbout);
 
-            add(menu);
-        }
+        add(file);
+        add(view);
+        add(help);
+    }
+
+    private void add(Menu menu, String name, Runnable action)
+    {
+        MenuItem item = new MenuItem(name);
+        item.addActionListener(e -> action.run());
+        menu.add(item);
     }
 }

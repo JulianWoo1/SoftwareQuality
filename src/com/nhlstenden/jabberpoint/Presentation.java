@@ -29,7 +29,7 @@ public class Presentation implements SlideComponent
                 }
             }
         }
-        
+
         return instance;
     }
 
@@ -38,10 +38,7 @@ public class Presentation implements SlideComponent
     private int currentSlide;
     private final List<PresentationChangeListener> changeListeners = new ArrayList<>();
 
-    private Presentation()
-    {
-        this.serializer = new XMLSerializer();
-    }
+    private Presentation() {}
 
     public void setSerializer(PresentationSerializer serializer)
     {
@@ -55,8 +52,7 @@ public class Presentation implements SlideComponent
 
     private void notifyChanged()
     {
-        for (PresentationChangeListener listener : this.changeListeners)
-        {
+        for (PresentationChangeListener listener : this.changeListeners) {
             listener.onPresentationChanged();
         }
     }
@@ -99,13 +95,11 @@ public class Presentation implements SlideComponent
 
     public void nextSlide()
     {
-        if (this.currentSlide + 1 >= this.slides.size())
+        if (this.currentSlide + 1 < this.slides.size())
         {
-            return;
+            this.currentSlide++;
+            notifyChanged();
         }
-
-        this.currentSlide++;
-        notifyChanged();
     }
 
     public void previousSlide()
@@ -136,7 +130,7 @@ public class Presentation implements SlideComponent
         }
     }
 
-    public void savePresentationToXMLFile(String path) 
+    public void savePresentationToXMLFile(String path)
     {
         try
         {
@@ -157,14 +151,12 @@ public class Presentation implements SlideComponent
     @Override
     public void draw(Graphics graphics, int x, int y)
     {
-        if (this.slides == null || this.slides.isEmpty())
+        if (this.slides.isEmpty())
         {
             graphics.drawString("No slides loaded", x + 50, y + 50);
             return;
         }
-
-        Slide slide = this.slides.get(this.currentSlide);
-        slide.draw(graphics, x, y);
+        this.slides.get(this.currentSlide).draw(graphics, x, y);
     }
 
     public void addSlide(Slide slide) {
