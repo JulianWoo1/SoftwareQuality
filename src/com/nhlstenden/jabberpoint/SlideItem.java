@@ -1,33 +1,28 @@
 package com.nhlstenden.jabberpoint;
 
-public abstract class SlideItem implements SlideComponent
-{
-    // L (Liskov Substitution Principle):
-    // All subclasses TextItem and BitmapItem can be used wherever
-    // SlideItem is expected without breaking behavior.
-    protected int level = 0;
+public abstract class SlideItem implements SlideComponent {
+  // L (Liskov Substitution Principle):
+  // All subclasses TextItem and BitmapItem can be used wherever
+  // SlideItem is expected without breaking behavior.
+  protected int level = 0;
 
-    protected SlideItem(int level)
-    {
-        this.level = level;
-    }
-    
-    public SlideItem()
-    {
-        this(0);
-    }
+  protected SlideItem(int level) {
+    this.level = level;
+  }
 
-    public int getLevel()
-    {
-        return this.level;
-    }
+  public SlideItem() {
+    this(0);
+  }
 
-    public void setLevel(int level)
-    {
-        this.level = level;
-    }
+  public int getLevel() {
+    return this.level;
+  }
 
-    public abstract String getText();
+  public void setLevel(int level) {
+    this.level = level;
+  }
 
-    public abstract String getKind();
+  public abstract String getText();
+
+  public abstract String getKind();
 }
