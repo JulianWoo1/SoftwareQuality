@@ -17,7 +17,7 @@ jobs:
       - name: Run Spotless (format check)
         run: |
           curl -sSL -o spotless.jar \
-            https://repo1.maven.org/maven2/com/diffplug/spotless/spotless-cli/2.43.0/spotless-cli-2.43.0.jar
+            https://repo1.maven.org/maven2/com/diffplug/spotless/spotless-cli/2.43.0/spotless-cli-2.43.0-all.jar
           java -jar spotless.jar check
 
       - name: Run Checkstyle
