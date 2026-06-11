@@ -3,11 +3,9 @@ name: Acceptance (Java)
 on:
   workflow_dispatch:
   push:
-    branches:
-      - accept
+    branches: [Acceptence]
   pull_request:
-    branches:
-      - accept
+    branches: [Acceptence]
 
 jobs:
   acceptance:
@@ -16,6 +14,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Run Spotless (format check)
+        run: |
+          curl -sSL -o spotless.jar \
+            https://repo1.maven.org/maven2/com/diffplug/spotless/spotless-cli/2.43.0/spotless-cli-2.43.0.jar
+          java -jar spotless.jar check
+
+      - name: Run Checkstyle
+        run: |
+          curl -sSL -o checkstyle.jar \
+            https://repo1.maven.org/maven2/com/puppycrawl/tools/checkstyle/10.12.4/checkstyle-10.12.4-all.jar
+          java -jar checkstyle.jar -c config/checkstyle/checkstyle.xml src
 
       - name: Set up JDK
         uses: actions/setup-java@v4
