@@ -4,7 +4,7 @@ import com.nhlstenden.jabberpoint.Presentation;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

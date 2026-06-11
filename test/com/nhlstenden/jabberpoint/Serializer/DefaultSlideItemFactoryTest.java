@@ -1,6 +1,5 @@
 package com.nhlstenden.jabberpoint.Serializer;
 
-import com.nhlstenden.jabberpoint.Slide;
 import com.nhlstenden.jabberpoint.SlideItem;
 import com.nhlstenden.jabberpoint.SlideItems.BitmapItem;
 import com.nhlstenden.jabberpoint.SlideItems.TextItem;
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DefaultSlideItemFactoryTest
 {
     private DefaultSlideItemFactory defaultSlideItemFactory;
-    
+
     @BeforeEach
     void setup()
     {
@@ -42,7 +41,8 @@ class DefaultSlideItemFactoryTest
     @Test
     void testCreate_UnsupportedType_ShouldThrow()
     {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () ->
+        {
             defaultSlideItemFactory.create("unknown", 1, "data");
         });
     }
@@ -59,7 +59,8 @@ class DefaultSlideItemFactoryTest
     @Test
     void testCreate_ImageItemHasInvalidPath_ShouldThrow()
     {
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RuntimeException.class, () ->
+        {
             defaultSlideItemFactory.create("image", 1, "test.jpg");
         });
     }

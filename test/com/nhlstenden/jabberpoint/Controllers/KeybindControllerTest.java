@@ -13,30 +13,11 @@ class KeybindControllerTest
     private FakeActions actions;
     private KeybindController controller;
 
-    static class FakeActions extends PresentationActions
-    {
-        boolean nextCalled = false;
-        boolean previousCalled = false;
-        boolean exitCalled = false;
-
-        FakeActions()
-        {
-            super(null, null);
-        }
-
-        @Override
-        public void nextSlide() { nextCalled = true; }
-
-        @Override
-        public void previousSlide() { previousCalled = true; }
-
-        @Override
-        public void exitApplication() { exitCalled = true; }
-    }
-
     private KeyEvent key(int keyCode)
     {
-        Component source = new Component() {};
+        Component source = new Component()
+        {
+        };
         return new KeyEvent(source, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, keyCode, KeyEvent.CHAR_UNDEFINED);
     }
 
@@ -110,5 +91,35 @@ class KeybindControllerTest
         assertFalse(actions.nextCalled);
         assertFalse(actions.previousCalled);
         assertFalse(actions.exitCalled);
+    }
+
+    static class FakeActions extends PresentationActions
+    {
+        boolean nextCalled = false;
+        boolean previousCalled = false;
+        boolean exitCalled = false;
+
+        FakeActions()
+        {
+            super(null, null);
+        }
+
+        @Override
+        public void nextSlide()
+        {
+            nextCalled = true;
+        }
+
+        @Override
+        public void previousSlide()
+        {
+            previousCalled = true;
+        }
+
+        @Override
+        public void exitApplication()
+        {
+            exitCalled = true;
+        }
     }
 }

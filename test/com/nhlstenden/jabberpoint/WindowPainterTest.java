@@ -24,7 +24,7 @@ class WindowPainterTest
     @Test
     void testPresentationChanged_ShouldNotThrow()
     {
-        assertDoesNotThrow(()-> windowPainter.onPresentationChanged());
+        assertDoesNotThrow(() -> windowPainter.onPresentationChanged());
     }
 
     @Test
