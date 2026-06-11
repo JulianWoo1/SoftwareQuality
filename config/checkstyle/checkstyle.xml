@@ -7,19 +7,14 @@
 
     <module name="TreeWalker">
 
-        <!-- basis kwaliteit -->
         <module name="NeedBraces"/>
         <module name="EmptyBlock"/>
-        <module name="AvoidStarImport"/>
         <module name="UnusedImports"/>
-
-        <module name="Indentation">
-            <property name="basicOffset" value="4"/>
-        </module>
+        <module name="AvoidStarImport"/>
 
         <module name="MethodName"/>
-        <module name="ClassName"/>
-        <module name="VariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
 
     </module>
 
