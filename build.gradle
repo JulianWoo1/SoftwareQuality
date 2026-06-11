@@ -16,8 +16,15 @@ java {
 spotless {
     java {
         googleJavaFormat('1.19.2')
+
         removeUnusedImports()
-        trimTrailingWhitespace()
-        endWithNewline()
+
+        importOrder(
+                'java',
+                'javax',
+                'org',
+                'com.nhlstenden',
+                ''
+        )
     }
 }
