@@ -26,6 +26,7 @@ public class WindowFrame extends JFrame
         setSize(new Dimension(1200, 800));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        setTitle("Jabberpoint");
     }
     
     private void setupMenu()

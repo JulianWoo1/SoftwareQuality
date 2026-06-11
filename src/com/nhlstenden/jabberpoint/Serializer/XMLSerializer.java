@@ -1,12 +1,15 @@
 package com.nhlstenden.jabberpoint.Serializer;
 
+import com.nhlstenden.jabberpoint.Serializer.nodes.ItemNode;
+import com.nhlstenden.jabberpoint.Serializer.nodes.Node;
+import com.nhlstenden.jabberpoint.Serializer.nodes.PresentationNode;
+import com.nhlstenden.jabberpoint.Serializer.nodes.SlideNode;
+import com.nhlstenden.jabberpoint.Serializer.nodes.TitleNode;
 import com.nhlstenden.jabberpoint.Slide;
 import com.nhlstenden.jabberpoint.SlideItem;
 import com.nhlstenden.jabberpoint.Presentation;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import org.w3c.dom.Document;
 
@@ -19,7 +22,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +100,7 @@ public class XMLSerializer implements PresentationSerializer
 
         transformer.transform(source, result);
     }
-    
+
     @Override
     public void loadToPresentation(String path, Presentation presentation) throws Exception
     {
@@ -106,7 +108,12 @@ public class XMLSerializer implements PresentationSerializer
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new File(path));
 
-        traverse(document.getDocumentElement(), new SlideLoaderVisitor(presentation, new DefaultSlideItemFactory()));
+        Node root = parse(document.getDocumentElement());
+
+        root.accept(new PresentationBuilderVisitor(
+                presentation,
+                new DefaultSlideItemFactory()
+        ));
     }
 
     @Override
@@ -118,39 +125,81 @@ public class XMLSerializer implements PresentationSerializer
         save(path);
     }
 
-    private void traverse(Node node, XMLVisitor visitor)
+    private Node parse(Element element)
     {
-        if (node.getNodeType() == Node.ELEMENT_NODE)
-        {
-            Element element = (Element) node;
-            String tag = element.getTagName();
+        String tag = element.getTagName();
 
-            switch (tag)
+        switch (tag)
+        {
+            case "presentation":
             {
-                case "presentation":
-                    visitor.visitPresentation(element);
-                    break;
-                case "showtitle":
-                    visitor.visitShowTitle(element);
-                    break;
-                case "slide":
-                    visitor.visitSlide(element);
-                    break;
-                case "title":
-                    visitor.visitTitle(element);
-                    break;
-                case "item":
-                    visitor.visitItem(element);
-                    break;
-                default:
-                    break;
-            }
-        }
+                PresentationNode node = new PresentationNode();
 
-        NodeList children = node.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++)
-        {
-            traverse(children.item(i), visitor);
+                NodeList children = element.getChildNodes();
+                for (int i = 0; i < children.getLength(); i++)
+                {
+                    if (children.item(i) instanceof Element childEl)
+                    {
+                        Node child = parse(childEl);
+
+                        if (child instanceof TitleNode t)
+                        {
+                            node.title = t.text;
+                        }
+                        else
+                        {
+                            node.children.add(child);
+                        }
+                    }
+                }
+
+                return node;
+            }
+
+            case "slide":
+            {
+                SlideNode node = new SlideNode();
+
+                NodeList children = element.getChildNodes();
+                for (int i = 0; i < children.getLength(); i++)
+                {
+                    if (children.item(i) instanceof Element childEl)
+                    {
+                        Node child = parse(childEl);
+
+                        if (child instanceof TitleNode t)
+                        {
+                            node.title = t.text;
+                        }
+                        else
+                        {
+                            node.children.add(child);
+                        }
+                    }
+                }
+
+                return node;
+            }
+
+            case "title":
+            case "showtitle":
+            {
+                TitleNode node = new TitleNode();
+                node.text = element.getTextContent();
+                return node;
+            }
+
+            case "item":
+            {
+                ItemNode node = new ItemNode();
+                node.text = element.getTextContent();
+                node.level = Integer.parseInt(element.getAttribute("level"));
+                node.kind = element.getAttribute("kind");
+                return node;
+            }
+
+            default:
+                return null;
         }
     }
 }
