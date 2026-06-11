@@ -14,6 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Run Checkstyle
         run: |
           curl -sSL -o checkstyle.jar \
@@ -23,11 +29,14 @@ jobs:
             -c config/checkstyle/checkstyle.xml \
             src
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Spotless (Google Java Format check)
+        run: |
+          curl -sSL -o google-java-format.jar \
+            https://github.com/google/google-java-format/releases/download/v1.19.2/google-java-format-1.19.2-all-deps.jar
+
+          find src -name "*.java" > sources.txt
+
+          java -jar google-java-format.jar --dry-run --set-exit-if-changed @sources.txt
 
       - name: Download JUnit Platform Console
         run: |

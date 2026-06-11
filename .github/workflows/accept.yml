@@ -15,6 +15,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Run Checkstyle
         run: |
           curl -sSL -o checkstyle.jar \
@@ -24,11 +30,14 @@ jobs:
             -c config/checkstyle/checkstyle.xml \
             src
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Spotless (Google Java Format check)
+        run: |
+          curl -sSL -o google-java-format.jar \
+            https://github.com/google/google-java-format/releases/download/v1.19.2/google-java-format-1.19.2-all-deps.jar
+
+          find src -name "*.java" > sources.txt
+
+          java -jar google-java-format.jar --dry-run --set-exit-if-changed @sources.txt
 
       - name: Download JUnit Platform Console
         run: |
@@ -47,13 +56,13 @@ jobs:
           find test -name "*.java" > tests.txt
           javac -encoding UTF-8 -cp "out/classes:junit-platform-console-standalone.jar" -d out/test-classes @tests.txt
 
-      - name: Run acceptance tests
+      - name: Run tests
         run: |
           java -Djava.awt.headless=true -jar junit-platform-console-standalone.jar execute \
             --class-path "out/classes:out/test-classes" \
             --scan-class-path
 
-      - name: Build acceptance JAR
+      - name: Build JAR
         run: |
           echo "Main-Class: com.nhlstenden.jabberpoint.JabberPoint" > manifest.mf
           jar cfm out/JabberPoint-acceptance.jar manifest.mf -C out/classes .
