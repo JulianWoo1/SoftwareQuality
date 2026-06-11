@@ -24,6 +24,7 @@ public class WindowFrame extends JFrame
     {
         add(new WindowPainter(this.presentation));
         setSize(new Dimension(1200, 800));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
     
