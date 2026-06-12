@@ -89,7 +89,6 @@ class KeybindControllerTest {
         assertFalse(actions.exitCalled);
     }
 
-    // IMPORTANT: must be static to avoid JUnit discovery issues
     static class FakeActions implements PresentationActionsApi {
 
         boolean nextCalled = false;

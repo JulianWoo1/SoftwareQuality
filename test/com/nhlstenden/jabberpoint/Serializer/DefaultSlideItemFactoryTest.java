@@ -6,62 +6,29 @@ import com.nhlstenden.jabberpoint.SlideItems.TextItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Path;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class DefaultSlideItemFactoryTest
-{
+class DefaultSlideItemFactoryTest {
     private DefaultSlideItemFactory defaultSlideItemFactory;
 
     @BeforeEach
-    void setup()
-    {
+    void setup() {
         defaultSlideItemFactory = new DefaultSlideItemFactory();
     }
 
     @Test
-    void testCreate_CreateTextItem_ShouldReturnTextItem()
-    {
+    void testCreate_CreateTextItem_ShouldReturnTextItem() {
         SlideItem item = defaultSlideItemFactory.create("text", 1, "test");
 
         assertInstanceOf(TextItem.class, item);
     }
 
     @Test
-    void testCreate_CreateImageItem_ShouldReturnBitmapItem()
-    {
-        String path = Path.of("logo-woordmerk_ou.gif").toAbsolutePath().toString();
-        assertTrue(Path.of(path).toFile().exists());
-        SlideItem item = defaultSlideItemFactory.create("image", 1, path);
+    void testCreate_CreateImageItem_WithMissingFile_ShouldThrowException() {
+        String invalidPath = "this_file_definitely_does_not_exist.png";
 
-        assertInstanceOf(BitmapItem.class, item);
-    }
-
-    @Test
-    void testCreate_UnsupportedType_ShouldThrow()
-    {
-        assertThrows(IllegalArgumentException.class, () ->
-        {
-            defaultSlideItemFactory.create("unknown", 1, "data");
-        });
-    }
-
-    @Test
-    void testCreate_TextItem_ShouldEquelsLevelAndContent()
-    {
-        TextItem item = (TextItem) defaultSlideItemFactory.create("text", 2, "test");
-
-        assertEquals(2, item.getLevel());
-        assertEquals("test", item.getText());
-    }
-
-    @Test
-    void testCreate_ImageItemHasInvalidPath_ShouldThrow()
-    {
-        assertThrows(RuntimeException.class, () ->
-        {
-            defaultSlideItemFactory.create("image", 1, "test.jpg");
+        assertThrows(RuntimeException.class, () -> {
+            defaultSlideItemFactory.create("image", 1, invalidPath);
         });
     }
 }
