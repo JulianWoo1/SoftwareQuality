@@ -1,18 +1,20 @@
 package com.nhlstenden.jabberpoint;
 
-public class JabberPoint
-{
-    public static void main(String[] argv)
-    {
-        new WindowFrame();
+import com.nhlstenden.jabberpoint.Serializer.XMLSerializer;
 
-        if(argv.length == 0)
-        {
-            Presentation.getInstance().loadPresentationFromXMLFile("demo.xml");
-        }
-        else
-        {
-            Presentation.getInstance().loadPresentationFromXMLFile(argv[0]);
-        }
+public class JabberPoint {
+  public static void main(String[] args) {
+    Presentation presentation = Presentation.getInstance();
+    new WindowFrame(presentation);
+
+    XMLSerializer loader = new XMLSerializer();
+
+    String file = (args.length == 0) ? "demo.xml" : args[0];
+
+    try {
+      loader.loadToPresentation(file, presentation);
+    } catch (Exception e) {
+      System.err.println("Load error: " + e.getMessage());
     }
+  }
 }

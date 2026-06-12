@@ -1,79 +1,50 @@
 package com.nhlstenden.jabberpoint.Controllers;
 
-import com.nhlstenden.jabberpoint.Presentation;
-import com.nhlstenden.jabberpoint.WindowFrame;
+public class PresentationActions implements PresentationActionsApi {
 
-import javax.swing.*;
+  private final PresentationService service;
 
-public class PresentationActions
-{
-    private final WindowFrame windowFrame;
-    private final Presentation presentation;
+  public PresentationActions(PresentationService service) {
+    this.service = service;
+  }
 
-    public PresentationActions(WindowFrame windowFrame, Presentation presentation)
-    {
-        this.windowFrame = windowFrame;
-        this.presentation = presentation;
-    }
+  @Override
+  public void openPresentation() {
+    service.open();
+  }
 
-    public void openPresentation()
-    {
-        JFileChooser chooser = new JFileChooser();
-        if (chooser.showOpenDialog(this.windowFrame) == JFileChooser.APPROVE_OPTION)
-        {
-            this.presentation.loadPresentationFromXMLFile(chooser.getSelectedFile().getAbsolutePath());
-        }
-    }
+  @Override
+  public void newPresentation() {
+    service.clear();
+  }
 
-    public void newPresentation()
-    {
-        this.presentation.clearPresentation();
-    }
+  @Override
+  public void savePresentation() {
+    service.save();
+  }
 
-    public void savePresentation()
-    {
-        JFileChooser chooser = new JFileChooser();
-        if (chooser.showSaveDialog(this.windowFrame) == JFileChooser.APPROVE_OPTION)
-        {
-            this.presentation.savePresentationToXMLFile(chooser.getSelectedFile().getAbsolutePath());
-        }
-    }
+  @Override
+  public void nextSlide() {
+    service.next();
+  }
 
-    public void nextSlide()
-    {
-        this.presentation.nextSlide();
-    }
+  @Override
+  public void previousSlide() {
+    service.previous();
+  }
 
-    public void previousSlide()
-    {
-        this.presentation.previousSlide();
-    }
+  @Override
+  public void gotoSlide() {
+    service.goTo();
+  }
 
-    public void gotoSlide()
-    {
-        String pageNumberStr = JOptionPane.showInputDialog("Page Number?");
-        if (pageNumberStr == null)
-        {
-            return;
-        }
+  @Override
+  public void showAbout() {
+    service.about();
+  }
 
-        try
-        {
-            int pageNumber = Integer.parseInt(pageNumberStr);
-            this.presentation.setCurrentSlide(pageNumber - 1);
-        } catch (NumberFormatException ignored)
-        {
-            JOptionPane.showMessageDialog(this.windowFrame, "Please enter a valid number.");
-        }
-    }
-
-    public void showAbout()
-    {
-        JOptionPane.showMessageDialog(this.windowFrame, "JabberPoint");
-    }
-
-    public void exitApplication()
-    {
-        this.windowFrame.dispose();
-    }
+  @Override
+  public void exitApplication() {
+    service.exit();
+  }
 }

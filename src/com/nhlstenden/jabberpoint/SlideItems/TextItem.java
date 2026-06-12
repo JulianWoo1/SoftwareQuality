@@ -1,46 +1,39 @@
 package com.nhlstenden.jabberpoint.SlideItems;
 
 import com.nhlstenden.jabberpoint.SlideItem;
-
 import java.awt.*;
 
-public class TextItem extends SlideItem
-{
-    private String textValue;
-    
-    public TextItem(int level, String textValue) {
-        super(level);
-        this.textValue = textValue;
-    }
+public class TextItem extends SlideItem {
+  private String textValue;
 
-    public String getTextValue()
-    {
-        return this.textValue;
-    }
+  public TextItem(int level, String textValue) {
+    super(level);
+    this.textValue = textValue;
+  }
 
-    public void setTextValue(String textValue)
-    {
-        this.textValue = textValue;
-    }
+  public String getTextValue() {
+    return this.textValue;
+  }
 
-    @Override
-    public void draw(Graphics graphics, int x, int y)
-    {
-        int indent = this.level * 20;
+  public void setTextValue(String textValue) {
+    this.textValue = textValue;
+  }
 
-        graphics.setFont(new Font("Arial", Font.PLAIN, 20));
-        graphics.drawString(this.textValue, x + indent, y);
-    }
+  @Override
+  public void draw(Graphics graphics, int x, int y) {
+    int indent = this.level * 20;
 
-    @Override
-    public String getText()
-    {
-        return this.textValue;
-    }
+    graphics.setFont(new Font("Arial", Font.PLAIN, 20));
+    graphics.drawString(this.textValue, x + indent, y);
+  }
 
-    @Override
-    public String getKind()
-    {
-        return "text";
-    }
+  @Override
+  public String getText() {
+    return this.textValue;
+  }
+
+  @Override
+  public String getKind() {
+    return "text";
+  }
 }

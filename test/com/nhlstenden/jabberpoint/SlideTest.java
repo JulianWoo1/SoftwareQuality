@@ -40,7 +40,7 @@ class SlideTest
         BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
 
-        assertDoesNotThrow(()-> slide.draw(graphics, 0, 0));
+        assertDoesNotThrow(() -> slide.draw(graphics, 0, 0));
         graphics.dispose();
     }
 
