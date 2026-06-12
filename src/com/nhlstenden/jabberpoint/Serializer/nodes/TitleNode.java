@@ -7,6 +7,6 @@ public class TitleNode implements Node {
 
   @Override
   public void accept(NodeVisitor visitor) {
-    visitor.visitTitle(this);
+    visitor.visit(this);
   }
 }

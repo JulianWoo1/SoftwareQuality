@@ -18,26 +18,26 @@ public class PresentationBuilderVisitor implements NodeVisitor {
   }
 
   @Override
-  public void visitPresentation(PresentationNode node) {
+  public void visit(PresentationNode node) {
     presentation.setTitle(node.title);
   }
 
   @Override
-  public void visitSlide(SlideNode node) {
+  public void visit(SlideNode node) {
     currentSlide = new Slide();
     currentSlide.setTitle(node.title);
     presentation.addSlide(currentSlide);
   }
 
   @Override
-  public void visitTitle(TitleNode node) {
+  public void visit(TitleNode node) {
     if (currentSlide != null) {
       currentSlide.setTitle(node.text);
     }
   }
 
   @Override
-  public void visitItem(ItemNode node) {
+  public void visit(ItemNode node) {
     if (currentSlide != null) {
       currentSlide.addSlideItem(factory.create(node.kind, node.level, node.text));
     }

@@ -6,11 +6,11 @@ import com.nhlstenden.jabberpoint.Serializer.nodes.SlideNode;
 import com.nhlstenden.jabberpoint.Serializer.nodes.TitleNode;
 
 public interface NodeVisitor {
-  void visitPresentation(PresentationNode node);
+  void visit(PresentationNode node);
 
-  void visitSlide(SlideNode node);
+  void visit(SlideNode node);
 
-  void visitTitle(TitleNode node);
+  void visit(TitleNode node);
 
-  void visitItem(ItemNode node);
+  void visit(ItemNode node);
 }

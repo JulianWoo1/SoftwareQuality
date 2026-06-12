@@ -11,9 +11,9 @@ public class WindowFrame extends JFrame {
 
     PresentationService service = new PresentationService(presentation, serializer, this);
 
-    PresentationActions actions = new PresentationActions(service);
+    PresentationActionsApi actions = new PresentationActions(service);
 
-    add(new WindowPainter(presentation));
+    addKeyListener(new KeybindController(actions));
 
     setSize(new Dimension(1200, 800));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

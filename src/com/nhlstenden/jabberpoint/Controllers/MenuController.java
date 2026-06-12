@@ -5,7 +5,9 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 
 public class MenuController extends MenuBar {
-  public MenuController(PresentationActions actions) {
+
+  public MenuController(PresentationActionsApi actions) {
+
     Menu file = new Menu("File");
     add(file, "Open", actions::openPresentation);
     add(file, "New", actions::newPresentation);

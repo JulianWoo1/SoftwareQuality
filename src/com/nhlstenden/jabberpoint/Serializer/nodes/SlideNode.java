@@ -10,7 +10,7 @@ public class SlideNode implements Node {
 
   @Override
   public void accept(NodeVisitor visitor) {
-    visitor.visitSlide(this);
+    visitor.visit(this);
 
     for (Node child : children) {
       child.accept(visitor);

@@ -9,6 +9,6 @@ public class ItemNode implements Node {
 
   @Override
   public void accept(NodeVisitor visitor) {
-    visitor.visitItem(this);
+    visitor.visit(this);
   }
 }

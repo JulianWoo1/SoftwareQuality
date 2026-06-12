@@ -4,9 +4,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeybindController extends KeyAdapter {
-  private final PresentationActions actions;
 
-  public KeybindController(PresentationActions actions) {
+  private final PresentationActionsApi actions;
+
+  public KeybindController(PresentationActionsApi actions) {
     this.actions = actions;
   }
 
