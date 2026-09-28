@@ -16,5 +16,6 @@ public class JabberPoint {
     } catch (Exception e) {
       System.err.println("Load error: " + e.getMessage());
     }
+    presentation.setCurrentSlide(0);
   }
 }

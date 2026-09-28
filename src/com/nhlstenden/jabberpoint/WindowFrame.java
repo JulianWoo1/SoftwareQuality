@@ -13,8 +13,6 @@ public class WindowFrame extends JFrame {
 
     PresentationActionsApi actions = new PresentationActions(service);
 
-    addKeyListener(new KeybindController(actions));
-
     setSize(new Dimension(1200, 800));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setTitle("JabberPoint");
@@ -25,6 +23,7 @@ public class WindowFrame extends JFrame {
     setFocusable(true);
     requestFocusInWindow();
 
+    add(new WindowPainter(presentation));
     setVisible(true);
   }
 }
