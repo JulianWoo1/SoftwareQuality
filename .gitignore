@@ -2,6 +2,5 @@ out.lnk
 bin
 docs
 build/
-.idea
 out/
 junit-platform-console-standalone.jar
